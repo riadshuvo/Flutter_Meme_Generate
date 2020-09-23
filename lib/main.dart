@@ -264,7 +264,7 @@ class _HomePageState extends State<HomePage> {
                           showDialog(
                               context: context,
                               builder: (_) => new AlertDialog(
-                                title:Text('Chose Your Color') ,
+                                title:Text('Chose Your Header Color') ,
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
                                     BorderRadius.all(
@@ -331,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                           showDialog(
                               context: context,
                               builder: (_) => new AlertDialog(
-                                title:Text('Chose Your Color') ,
+                                title:Text('Chose Your Footer Color') ,
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
                                     BorderRadius.all(
@@ -366,7 +366,7 @@ class _HomePageState extends State<HomePage> {
                 child: TextField(
                   onChanged: (val) {
                     setState(() {
-                      headerText = val;
+                      footerText = val;
                     });
                   },
                   decoration: InputDecoration(hintText: "Footer Text"),

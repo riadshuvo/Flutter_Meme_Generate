@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ColorChoice{
-  List<Color> colorsys =<Color> [
+  List<Color> colorsys = <Color> [
     Colors.white,
     Colors.green,
     Colors.redAccent,
