@@ -38,6 +38,7 @@ dependencies:
   video_player: ^0.10.3
   flutter_speed_dial: ^1.2.5
   double_back_to_close_app: ^1.2.0
+  fab_circular_menu: ^1.0.0
 
 dev_dependencies:
   flutter_test:

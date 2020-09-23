@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_meme_generator/colors.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -38,6 +40,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey globalKey = new GlobalKey();
+  final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
+
   Random rng = new Random();
 
   String headerText = "";
@@ -45,6 +49,9 @@ class _HomePageState extends State<HomePage> {
   bool imageSelected = false;
 
   File _image, _imageFile;
+  Color _headerColor = Colors.blue, _footerColor = Colors.blue;
+
+  List<Color> _choiceColor =  ColorChoice().colorsys;
 
   Future getImage(ImageSource source) async {
     var image;
@@ -127,7 +134,7 @@ class _HomePageState extends State<HomePage> {
         overlayColor: Colors.white30,
         animatedIconTheme: IconThemeData(size: 22.0),
         // this is ignored if animatedIcon is non null
-        child: Icon(Icons.add),
+       // child: Icon(Icons.add),
         onOpen: () => print('OPENING DIAL'),
         onClose: () => print('DIAL CLOSED'),
         curve: Curves.bounceIn,
@@ -155,7 +162,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   Widget memeStackContainer() {
     return RepaintBoundary(
       key: globalKey,
@@ -163,14 +169,14 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           _image != null
               ? Container(
-            margin: EdgeInsets.all(7),
-            height: 300,
-            width: double.infinity,
-            child: Image.file(
-              _image,
-              fit: BoxFit.cover,
-            ),
-          )
+                  margin: EdgeInsets.all(7),
+                  height: 300,
+                  width: double.infinity,
+                  child: Image.file(
+                    _image,
+                    fit: BoxFit.cover,
+                  ),
+                )
               : Container(),
           Container(
             width: MediaQuery.of(context).size.width,
@@ -184,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                     headerText.toUpperCase(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: _headerColor,
                       fontWeight: FontWeight.w700,
                       fontSize: 26,
                       shadows: <Shadow>[
@@ -209,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                       footerText.toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: _footerColor,
                         fontWeight: FontWeight.w700,
                         fontSize: 26,
                         shadows: <Shadow>[
@@ -239,24 +245,136 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: <Widget>[
-          TextField(
-            onChanged: (val) {
-              setState(() {
-                headerText = val;
-              });
-            },
-            decoration: InputDecoration(hintText: "Header Text"),
+          Row(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+                  child: Container(
+                    width: 30,
+                    height: 70,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 30),
+                      child: RawMaterialButton(
+                        shape: new CircleBorder(),
+                        elevation: 0.0,
+                        child: Icon(
+                          Icons.color_lens,
+                          color: _headerColor,
+                          size: 50,
+                        ),
+                        onPressed: (){
+                          showDialog(
+                              context: context,
+                              builder: (_) => new AlertDialog(
+                                title:Text('Chose Your Color') ,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                content: Builder(
+                                  builder: (context) {
+                                    // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                    var height = MediaQuery.of(context).size.height;
+                                    var width = MediaQuery.of(context).size.width;
+
+                                    return Container(
+                                      height: height - 500,
+                                      width: width - 100,
+                                      child: headerColorChoser(context),
+                                    );
+                                  },
+                                ),
+                              )
+                          );
+                        },
+                      ),
+                    )
+                    ),
+                  ),
+
+
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  onChanged: (val) {
+                    setState(() {
+                      headerText = val;
+                    });
+                  },
+                  decoration: InputDecoration(hintText: "Header Text"),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 12,
           ),
-          TextField(
-            onChanged: (val) {
-              setState(() {
-                footerText = val;
-              });
-            },
-            decoration: InputDecoration(hintText: "Footer Text"),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+                child: Container(
+                    width: 30,
+                    height: 70,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 30),
+                      child: RawMaterialButton(
+                        shape: new CircleBorder(),
+                        elevation: 0.0,
+                        child: Icon(
+                          Icons.color_lens,
+                          color: _footerColor,
+                          size: 50,
+                        ),
+                        onPressed: (){
+                          showDialog(
+                              context: context,
+                              builder: (_) => new AlertDialog(
+                                title:Text('Chose Your Color') ,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                content: Builder(
+                                  builder: (context) {
+                                    // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                    var height = MediaQuery.of(context).size.height;
+                                    var width = MediaQuery.of(context).size.width;
+
+                                    return Container(
+                                      height: height - 500,
+                                      width: width - 100,
+                                      child: footerColorChoser(context),
+                                    );
+                                  },
+                                ),
+                              )
+                          );
+                        },
+                      ),
+                    )
+                ),
+              ),
+
+
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  onChanged: (val) {
+                    setState(() {
+                      headerText = val;
+                    });
+                  },
+                  decoration: InputDecoration(hintText: "Footer Text"),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 20,
@@ -351,4 +469,58 @@ class _HomePageState extends State<HomePage> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
+  Widget headerColorChoser(BuildContext context) {
+    return Container(
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _choiceColor.length,
+          shrinkWrap: true,
+          itemBuilder: (_, index){
+            return Container(
+              height: 80,
+              width: 80,
+              margin: EdgeInsets.all(5),
+              child: RawMaterialButton(
+                onPressed: () {
+                  setState(() {
+                    _headerColor = _choiceColor[index];
+                    Navigator.pop(context, true);
+                  });
+                },
+                elevation: 2.0,
+                fillColor: _choiceColor[index],
+                padding: EdgeInsets.all(15.0),
+                shape: CircleBorder(),
+              ),
+            );
+          }),
+    );
+  }
+  Widget footerColorChoser(BuildContext context) {
+    return Container(
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _choiceColor.length,
+          shrinkWrap: true,
+          itemBuilder: (_, index){
+            return Container(
+              height: 80,
+              width: 80,
+              margin: EdgeInsets.all(5),
+              child: RawMaterialButton(
+                onPressed: () {
+                  setState(() {
+                    _footerColor = _choiceColor[index];
+                    Navigator.pop(context, true);
+                  });
+                },
+                elevation: 2.0,
+                fillColor: _choiceColor[index],
+                padding: EdgeInsets.all(15.0),
+                shape: CircleBorder(),
+              ),
+            );
+          }),
+    );
+  }
 }
